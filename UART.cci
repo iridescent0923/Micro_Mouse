@@ -1,0 +1,6 @@
+VERSION:3 SOURCE_TIMESTAMP:51508161
+NODE:I LEVEL:0 LINE:1 "C:\cvavreval\inc\mega128.h"
+NODE:I LEVEL:0 LINE:2 "C:\Users\±èµ¿¿í\Documents\StepMotor\UART.h"
+NODE:F LEVEL:0 LINE:5 "putchar(unsigned char c)"
+NODE:F LEVEL:0 LINE:14 "getchar(void)"
+NODE:F LEVEL:0 LINE:21 "InitializeUART(void)"

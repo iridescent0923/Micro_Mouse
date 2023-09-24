@@ -1,0 +1,73 @@
+#include <mega128.h>
+#include <delay.h>
+
+#include "LED.h"
+#include "INT.h"
+#include "Sensor.h"
+#include "UART.h"
+#include "StepMotor.h"
+
+
+
+
+
+interrupt [EXT_INT0] void ext_int0_isr(void) //sw1
+{  
+    PORTF=0x00;
+    delay_ms(1000);        
+
+}
+
+
+interrupt [EXT_INT1] void ext_int1_isr(void) //sw2
+{
+    PORTF=0xff;
+    delay_ms(1000); 
+
+}
+
+
+void main(void)
+{
+    IO_init();
+    INT_init();
+    InitializeSensor();
+    InitializeUART();
+    
+    InitializeStepMotor();
+
+// Global enable interrupts
+#asm("sei")
+
+//
+  LeftstepCount = 0; // 왼쪽 모터의 스텝 초기화
+RightstepCount = 0; // 오른쪽 모터의 스텝 초기화
+// Global enable interrupts
+#asm("sei")
+
+VelocityLeftmotorTCNT1 = 65400; // 왼쪽 모터의 속도 (65200 ~ 65535)
+VelocityRightmotorTCNT3 = 65400; // 오른쪽 모터의 속도 (65200 ~ 65535)
+
+Direction(FORWARD); // 한블럭 전진
+//Direction(LEFT); // 좌로 90도 턴
+//Direction(RIGHT); // 우로 90도 턴
+//Direction(HALF); // 반블럭 전진
+//
+
+
+while (1)
+{
+// Place your code here
+};
+    
+   
+}
+
+
+
+
+
+
+
+
+

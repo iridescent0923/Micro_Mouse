@@ -1,0 +1,41 @@
+RAM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+VelocityLeftmotorTCNT1                                            0x0500       2
+VelocityRightmotorTCNT3                                           0x0502       2
+adjLeftSensor                                                     0x0504       2
+adjRightSensor                                                    0x0506       2
+MAPP                                                              0x0508    1000
+counter_                                                          0x08F0       2
+rotateR                                                           0x08F2       8
+rotateL                                                           0x08FA       8
+LeftstepCount                                                     0x0902       2
+RightstepCount                                                    0x0904       2
+direction_control                                                 0x0906       1
+adjflagcnt                                                        0x0907       2
+vel_counter_high_L                                                0x0909       2
+vel_counter_high_R                                                0x090B       2
+vel_counter_high                                                  0x090D       2
+ACCEL_CONTROL                                                     0x090F       2
+Information                                                       0x0911       4
+Flag                                                              0x0915       2
+Button                                                            0x0917       2
+_seed                                                             0x0919       4
+
+EEPROM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+CANCEL_FLAG                                                       0x0000       2
+StandardSensor                                                    0x0002       6
+CenterStandardSensor                                              0x0008       6
+MAP                                                               0x000E     200
+MAP_COUNTER                                                       0x00D6       2
+
+Register Allocation
+Variable                                                          Register  Size
+--------------------------------------------------------------------------------
+mode                                                              R4,R5        2
+mode_UART                                                         R6,R7        2
+AVG                                                               R8,R9        2
+i                                                                 R10,R11      2
+PRINTF_COUNTER                                                    R12,R13      2

@@ -1,0 +1,16 @@
+RAM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+
+EEPROM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+
+Register Allocation
+Variable                                                          Register  Size
+--------------------------------------------------------------------------------
+front                                                             R4,R5        2
+left                                                              R6,R7        2
+right                                                             R8,R9        2
+counter                                                           R10,R11      2
+LED                                                               R12,R13      2

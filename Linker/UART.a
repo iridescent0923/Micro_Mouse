@@ -1,0 +1,101 @@
+;#include <mega128.h>
+;PCODE: $00000000 VOL: 0
+	#ifndef __SLEEP_DEFINED__
+;PCODE: $00000001 VOL: 0
+	#define __SLEEP_DEFINED__
+;PCODE: $00000002 VOL: 0
+	.EQU __se_bit=0x20
+;PCODE: $00000003 VOL: 0
+	.EQU __sm_mask=0x1C
+;PCODE: $00000004 VOL: 0
+	.EQU __sm_powerdown=0x10
+;PCODE: $00000005 VOL: 0
+	.EQU __sm_powersave=0x18
+;PCODE: $00000006 VOL: 0
+	.EQU __sm_standby=0x14
+;PCODE: $00000007 VOL: 0
+	.EQU __sm_ext_standby=0x1C
+;PCODE: $00000008 VOL: 0
+	.EQU __sm_adc_noise_red=0x08
+;PCODE: $00000009 VOL: 0
+	.SET power_ctrl_reg=mcucr
+;PCODE: $0000000A VOL: 0
+	#endif
+;PCODE: $0000000B VOL: 0
+;PCODE: $0000000C VOL: 0
+;#include "UART.h"
+;
+;// Write a character to the USART1 Transmitter
+;void putchar(char c){
+; 0005 0005 void putchar(char c){
+
+	.CSEG
+;PCODE: $0000000D VOL: 0
+;PCODE: $0000000E VOL: 0
+; 0005 0006     while((UCSR1A & DATA_REGISTER_EMPTY)==0);
+;	c -> Y+0
+;PCODE: $0000000F VOL: 0
+;PCODE: $00000010 VOL: 0
+;PCODE: $00000011 VOL: 0
+;PCODE: $00000012 VOL: 0
+;PCODE: $00000013 VOL: 0
+;PCODE: $00000014 VOL: 0
+; 0005 0007     UDR1=c;
+;PCODE: $00000015 VOL: 0
+;PCODE: $00000016 VOL: 0
+; 0005 0008 }
+;PCODE: $00000017 VOL: 0
+;PCODE: $00000018 VOL: 0
+;PCODE: $00000019 VOL: 0
+;
+;// Read a character from the USART1 Receiver
+;
+;
+;
+;unsigned char getchar(void){
+; 0005 000E unsigned char getchar(void){
+;PCODE: $0000001A VOL: 0
+;PCODE: $0000001B VOL: 0
+; 0005 000F     while((UCSR1A & RX_COMPLETE)==0);
+;PCODE: $0000001C VOL: 0
+;PCODE: $0000001D VOL: 0
+;PCODE: $0000001E VOL: 0
+;PCODE: $0000001F VOL: 0
+;PCODE: $00000020 VOL: 0
+;PCODE: $00000021 VOL: 0
+; 0005 0010     return UDR1;
+;PCODE: $00000022 VOL: 0
+;PCODE: $00000023 VOL: 0
+; 0005 0011 }
+;PCODE: $00000024 VOL: 0
+;
+;
+;
+;void InitializeUART(void){
+; 0005 0015 void InitializeUART(void){
+;PCODE: $00000025 VOL: 0
+;PCODE: $00000026 VOL: 0
+; 0005 0016     // USART1 initialization
+; 0005 0017     // Communication Parameters: 8 Data, 1 Stop, No Parity
+; 0005 0018     // USART1 Receiver: On
+; 0005 0019     // USART1 Transmitter: On
+; 0005 001A     // USART1 Mode: Asynchronous
+; 0005 001B     // USART1 Baud Rate: 9600
+; 0005 001C     UCSR1A=0x00;
+;PCODE: $00000027 VOL: 0
+;PCODE: $00000028 VOL: 0
+; 0005 001D     UCSR1B=0x18;
+;PCODE: $00000029 VOL: 0
+;PCODE: $0000002A VOL: 0
+; 0005 001E     UCSR1C=0x06;
+;PCODE: $0000002B VOL: 0
+;PCODE: $0000002C VOL: 0
+; 0005 001F     UBRR1H=0x00;
+;PCODE: $0000002D VOL: 0
+;PCODE: $0000002E VOL: 0
+; 0005 0020     UBRR1L=0x67;
+;PCODE: $0000002F VOL: 0
+;PCODE: $00000030 VOL: 0
+; 0005 0021 }
+;PCODE: $00000031 VOL: 0
+;PCODE: $00000032 VOL: 0

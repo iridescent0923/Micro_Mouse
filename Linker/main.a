@@ -1,0 +1,155 @@
+;#include <mega128.h>
+;PCODE: $00000000 VOL: 0
+	#ifndef __SLEEP_DEFINED__
+;PCODE: $00000001 VOL: 0
+	#define __SLEEP_DEFINED__
+;PCODE: $00000002 VOL: 0
+	.EQU __se_bit=0x20
+;PCODE: $00000003 VOL: 0
+	.EQU __sm_mask=0x1C
+;PCODE: $00000004 VOL: 0
+	.EQU __sm_powerdown=0x10
+;PCODE: $00000005 VOL: 0
+	.EQU __sm_powersave=0x18
+;PCODE: $00000006 VOL: 0
+	.EQU __sm_standby=0x14
+;PCODE: $00000007 VOL: 0
+	.EQU __sm_ext_standby=0x1C
+;PCODE: $00000008 VOL: 0
+	.EQU __sm_adc_noise_red=0x08
+;PCODE: $00000009 VOL: 0
+	.SET power_ctrl_reg=mcucr
+;PCODE: $0000000A VOL: 0
+	#endif
+;PCODE: $0000000B VOL: 0
+;PCODE: $0000000C VOL: 0
+;#include <delay.h>
+;
+;#include "LED.h"
+;#include "INT.h"
+;#include "Sensor.h"
+;#include "UART.h"
+;#include "StepMotor.h"
+;
+;
+;char rotateR[8] = {0b1001,0b0001,0b0101,0b0100,0b0110,0b0010,0b1010,0b1000};
+
+	.DSEG
+;//R모터가 전진하기 위한 8step
+;char rotateL[8] = {0b1001,0b1000,0b1010,0b0010,0b0110,0b0100,0b0101,0b0001};
+;//L모터가 전진하기 위한 8step
+;int LeftstepCount, RightstepCount; // rotateR과 rotateL의 각각 스텝이 모터에 순서대로 입력되도록 Count
+;unsigned int VelocityLeftmotorTCNT1, VelocityRightmotorTCNT3; // 왼쪽과 오른쪽 모터의 TCNT 속도
+;unsigned char direction_control; // 인터럽트 루틴에 방향정보를 전달하기 위한 전역변수
+;
+;
+;
+;interrupt [EXT_INT0] void ext_int0_isr(void) //sw1
+; 0000 0016 {
+
+	.CSEG
+;PCODE: $0000000D VOL: 0
+;PCODE: $0000000E VOL: 0
+; 0000 0017     PORTF=0x00;
+;PCODE: $0000000F VOL: 0
+;PCODE: $00000010 VOL: 0
+; 0000 0018     delay_ms(1000);
+;PCODE: $00000011 VOL: 0
+;PCODE: $00000012 VOL: 0
+;PCODE: $00000013 VOL: 0
+; 0000 0019 
+; 0000 001A }
+;PCODE: $00000014 VOL: 0
+;PCODE: $00000015 VOL: 0
+;PCODE: $00000016 VOL: 0
+;
+;
+;interrupt [EXT_INT1] void ext_int1_isr(void) //sw2
+; 0000 001E {
+;PCODE: $00000017 VOL: 0
+;PCODE: $00000018 VOL: 0
+; 0000 001F     PORTF=0xff;
+;PCODE: $00000019 VOL: 0
+;PCODE: $0000001A VOL: 0
+; 0000 0020     delay_ms(1000);
+;PCODE: $0000001B VOL: 0
+;PCODE: $0000001C VOL: 0
+;PCODE: $0000001D VOL: 0
+; 0000 0021 
+; 0000 0022 }
+;PCODE: $0000001E VOL: 0
+;PCODE: $0000001F VOL: 0
+;PCODE: $00000020 VOL: 0
+;
+;
+;void main(void)
+; 0000 0026 {
+;PCODE: $00000021 VOL: 0
+; 0000 0027     IO_init();
+;PCODE: $00000022 VOL: 0
+; 0000 0028     INT_init();
+;PCODE: $00000023 VOL: 0
+; 0000 0029     InitializeSensor();
+;PCODE: $00000024 VOL: 0
+; 0000 002A     InitializeUART();
+;PCODE: $00000025 VOL: 0
+; 0000 002B 
+; 0000 002C     InitializeStepMotor();
+;PCODE: $00000026 VOL: 0
+; 0000 002D 
+; 0000 002E // Global enable interrupts
+; 0000 002F #asm("sei")
+;PCODE: $00000027 VOL: 0
+	sei
+;PCODE: $00000028 VOL: 0
+; 0000 0030 
+; 0000 0031 //
+; 0000 0032   LeftstepCount = 0; // 왼쪽 모터의 스텝 초기화
+;PCODE: $00000029 VOL: 0
+; 0000 0033   RightstepCount = 0; // 오른쪽 모터의 스텝 초기화
+;PCODE: $0000002A VOL: 0
+; 0000 0034 // Global enable interrupts
+; 0000 0035 #asm("sei")
+;PCODE: $0000002B VOL: 0
+	sei
+;PCODE: $0000002C VOL: 0
+; 0000 0036 
+; 0000 0037 VelocityLeftmotorTCNT1 = 65400; // 왼쪽 모터의 속도 (65200 ~ 65535)
+;PCODE: $0000002D VOL: 0
+;PCODE: $0000002E VOL: 0
+; 0000 0038 VelocityRightmotorTCNT3 = 65400; // 오른쪽 모터의 속도 (65200 ~ 65535)
+;PCODE: $0000002F VOL: 0
+;PCODE: $00000030 VOL: 0
+; 0000 0039 
+; 0000 003A Direction(FORWARD); // 한블럭 전진
+;PCODE: $00000031 VOL: 0
+;PCODE: $00000032 VOL: 0
+;PCODE: $00000033 VOL: 0
+; 0000 003B //Direction(LEFT); // 좌로 90도 턴
+; 0000 003C //Direction(RIGHT); // 우로 90도 턴
+; 0000 003D //Direction(HALF); // 반블럭 전진
+; 0000 003E //
+; 0000 003F 
+; 0000 0040 
+; 0000 0041 while (1)
+;PCODE: $00000034 VOL: 0
+; 0000 0042 {
+; 0000 0043 // Place your code here
+; 0000 0044 };
+;PCODE: $00000035 VOL: 0
+;PCODE: $00000036 VOL: 0
+; 0000 0045 
+; 0000 0046 
+; 0000 0047 }
+;PCODE: $00000037 VOL: 0
+;PCODE: $00000038 VOL: 0
+;PCODE: $00000039 VOL: 0
+;
+;
+;
+;
+;
+;
+;
+;
+;

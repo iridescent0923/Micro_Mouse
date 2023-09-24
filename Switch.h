@@ -1,0 +1,14 @@
+#ifndef _SWITCH_H_
+#define _SWITCH_H_
+
+#ifndef TRUE
+#define TRUE 1
+
+#endif
+#ifndef FALSE
+#define FALSE 0
+#endif
+    void InitializeSwitch(void);
+    char SW1(void);
+    char SW2(void);
+#endif

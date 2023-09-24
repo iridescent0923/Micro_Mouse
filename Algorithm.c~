@@ -1,0 +1,189 @@
+#include <mega128.h>
+#include <stdio.h>
+#include <delay.h>
+#include "Sensor.h"
+#include "StepMotor.h"
+#include "LED.h"
+#include "Switch.h"
+#include "Algorithm.h"
+#include "UART.h"
+
+// Declare your global variables here
+extern unsigned int VelocityLeftmotorTCNT1, VelocityRightmotorTCNT3;
+extern unsigned int adjLeftSensor, adjRightSensor;
+extern unsigned int MAPP[500],counter_;
+
+
+
+
+unsigned int mode =0;
+unsigned int mode_UART=0;
+unsigned int AVG=0;
+eeprom unsigned int CANCEL_FLAG=0;             
+eeprom unsigned int StandardSensor[3] = {0};
+eeprom unsigned int CenterStandardSensor[3] ={0};
+float ref_leftSensor =0, ref_rightSensor=0;
+int i;
+int PRINTF_COUNTER=0;
+
+// SEARCH
+/*
+#define FORWARD 4
+#define LEFT 5
+#define RIGHT 6
+#define BACK 7
+#define HALF 8
+
+#define ACCEL_HALF 9
+#define DEACCEL_HALF 10
+#define DEACCEL_HALF_STOP 11
+#define ACCEL_HALF_START 12
+#define TURN_RIGHT 13   //RIGHT
+#define TURN_LEFT 14
+#define HALF_HALF 15
+#define HALF_HALF_HALF 16
+*/
+eeprom unsigned int MAP[100]={16,16,16,16,16,16,15,1,1,1,1,15,16,16,16,16,16,15,1,1,1,1,15,16,16,16,16,16,16,16,16,16,0,99};
+            
+eeprom unsigned int MAP_COUNTER=0;
+unsigned int MAP_COUNTER_DRIVE=0;
+unsigned int DRIVE_COUNTER=0;
+
+void CANCEL()
+{
+     // 180도 canceling
+        for(i=0;i<MAP_COUNTER;i++)
+        {
+            if((MAP[i]==0) ) //첫번째 0
+            {
+                    if(MAP[i-1]==TURN_LEFT)
+                    {
+                        MAP[i-2]=1;
+                        MAP[i-1]=1;//pass sign
+                        MAP[i]=1;
+                        MAP[i+1]=1; 
+                        MAP[i+2]=1;
+                        MAP[i+3]=1;
+                        MAP[i+4]=1;    
+                    }
+                    else //RIGHT였으면
+                    {
+                        MAP[i-2]=TURN_LEFT; //RIGHT to LEFT
+                        MAP[i-1]=1;//pass sign
+                        MAP[i]=1;
+                        MAP[i+1]=1; 
+                        MAP[i+2]=1;
+                        MAP[i+3]=1;
+                        MAP[i+4]=1;
+                    }    
+            }   
+            
+        
+        }
+        for(i=0;i<10;i++)
+        {
+            LED_ON(LED3);
+            delay_ms(100);
+            LED_OFF(LED3);
+            delay_ms(100);                
+        }
+        CANCEL_FLAG=1;
+
+}
+
+void main(void)
+{
+    InitializeSensor();
+    InitializeStepMotor();
+    IO_init();
+    InitializeSwitch();
+    InitializeUART();
+    #asm("sei");
+    
+    // sensor const 
+        // 벽유무 
+        /*legacy
+        StandardSensor[0] = 20; // left
+        StandardSensor[1] = 30; // front
+        StandardSensor[2] = 84; // right
+        */
+        
+        StandardSensor[0] = 29; // left
+        StandardSensor[1] = 60; // front  30  70
+        StandardSensor[2] = 84; // right
+        
+        // 가운데 있나? = 직진보정 
+        /* legacy
+        CenterStandardSensor[0] =(45);   //left   45+10
+        CenterStandardSensor[1] = 480;    //front
+        CenterStandardSensor[2] = (125);   //right   125+27  
+        */
+        
+        CenterStandardSensor[0] =(65);   //left   45+10
+        CenterStandardSensor[1] = 480;    //front
+        CenterStandardSensor[2] = (153);   //right   125+27
+    
+    
+    //=======================================
+    
+    while(1)
+{
+if(SW1() == TRUE)
+{
+    mode++;
+    mode%=4;
+    LED_OFF(LED1 | LED2 | LED3 | LED4);
+    switch(mode)
+    {
+        case 0: LED_ON(LED1); break;
+        case 1: LED_ON(LED2); break;
+        case 2: LED_ON(LED3); break;
+        case 3: LED_ON(LED4); break;
+    }  
+}
+
+
+if(SW2() == TRUE)
+{
+    switch(mode)
+    {
+    
+    case 0:
+    printf("=======================\t\r\n");
+     
+    for(i=0;i<100;i++)
+    {   
+        if(MAP[i]==99)
+        {   
+            printf("%d\t",MAP[i]);
+            printf("\t\r\n");
+           
+            break;
+        
+        }
+        if(i!=0 && i%5==0)
+        {
+            printf("%d\t",MAP[i]);
+            printf("\t\r\n");
+            
+        
+        }
+        else
+        {
+            printf("%d\t",MAP[i]);
+        }
+        
+    }
+    printf("=======================\t\r\n");
+    
+
+     
+        
+
+    
+    
+    }
+}
+}
+
+}

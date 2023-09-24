@@ -1,0 +1,11 @@
+VERSION:3 SOURCE_TIMESTAMP:515C835B
+NODE:I LEVEL:0 LINE:1 "C:\cvavreval\inc\mega128.h"
+NODE:I LEVEL:0 LINE:2 "C:\cvavreval\inc\delay.h"
+NODE:I LEVEL:0 LINE:4 "C:\cvavreval\inc\stdio.h"
+NODE:I LEVEL:0 LINE:5 "C:\Users\±èµ¿¿í\Documents\StepMotor\Sensor.h"
+NODE:I LEVEL:0 LINE:6 "C:\Users\±èµ¿¿í\Documents\StepMotor\UART.h"
+NODE:I LEVEL:0 LINE:7 "C:\Users\±èµ¿¿í\Documents\StepMotor\LED.h"
+NODE:M LEVEL:0 LINE:9 "ADC_VREF_TYPE"
+NODE:F LEVEL:0 LINE:11 "InitializeSensor(void)"
+NODE:F LEVEL:0 LINE:27 "read_adc(unsigned char adc_input)"
+NODE:F LEVEL:0 LINE:40 "readSensor(unsigned char si)"

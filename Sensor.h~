@@ -1,0 +1,13 @@
+#ifndef _Sensor_h_
+#define _Sensor_h_
+
+#define FRONT_SENSOR 0
+#define LEFT_SENSOR 1
+#define RIGHT_SENSOR 2
+
+#define ADC_VREF_TYPE 0x40
+
+    void SENSOR_init(void);
+    unsigned int readSENSOR(char si);
+     unsigned int read_adc(unsigned char adc_input);
+#endif
